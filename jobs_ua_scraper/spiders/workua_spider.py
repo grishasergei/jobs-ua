@@ -1,4 +1,5 @@
 import scrapy
+from datetime import datetime
 
 
 class WorkUaSpider(scrapy.Spider):
@@ -37,7 +38,7 @@ class WorkUaSpider(scrapy.Spider):
     def parse_job(self, response):
         # self.logger.info('Parsing ' + response.url)
         yield {
-            'job title':  response.xpath('//*[@id="h1-name"]/text()').extract_first(),
+            'position':  response.xpath('//*[@id="h1-name"]/text()').extract_first(),
             'salary': ' '.join(response.xpath('//*[@id="center"]/div/div[2]/div[1]/div[3]/div/h3//text()').extract()),
             'company': response.xpath('//*[text()="Компанія:"]/following-sibling::dd[1]/a//text()').extract_first(),
             'location': response.xpath('//*[text()="Місто:"]/following::dd/text()').extract_first(),
@@ -46,5 +47,6 @@ class WorkUaSpider(scrapy.Spider):
             'id': response.url.split('/')[-2],
             'url': response.url,
             'advertiser': 'work.ua',
+            'date': datetime.today().strftime('%Y-%m-%d')
         }
 
