@@ -20,10 +20,6 @@ class DouUaSpider(scrapy.Spider):
      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
      'X-Requested-With': 'XMLHttpRequest'
     }
-    cookies = {
-        'lang': 'en',
-        '_gat': '1',
-    }
 
     def parse(self, response):
         matches = response.xpath('//script//text()').re(r'CSRF_TOKEN.*"(.*)\"')
@@ -35,8 +31,7 @@ class DouUaSpider(scrapy.Spider):
         yield scrapy.FormRequest('https://jobs.dou.ua/vacancies/xhr-load/?',
                                  headers=self.headers,
                                  cookies={
-                                     **self.cookies,
-                                     **{'csrftoken': csrf_token}
+                                     'csrftoken': csrf_token
                                  },
                                  formdata={
                                      'csrfmiddlewaretoken': csrf_token,
@@ -60,8 +55,7 @@ class DouUaSpider(scrapy.Spider):
                                   encoding='utf-8',
                                   headers=self.headers,
                                   cookies={
-                                      **self.cookies,
-                                      **{'csrftoken': csrf_token}
+                                     'csrftoken': csrf_token
                                   })
 
         count = response.meta.get('count')
@@ -75,8 +69,7 @@ class DouUaSpider(scrapy.Spider):
             yield scrapy.FormRequest('https://jobs.dou.ua/vacancies/xhr-load/?',
                                      headers=self.headers,
                                      cookies={
-                                         **self.cookies,
-                                         **{'csrftoken': csrf_token}
+                                         'csrftoken': csrf_token
                                      },
                                      formdata={
                                          'csrfmiddlewaretoken': csrf_token,
